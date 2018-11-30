@@ -2,6 +2,8 @@ package ${package.Service};
 
 import ${package.Entity}.${entity};
 import ${superServiceClassPackage};
+import com.baomidou.mybatisplus.plugins.Page;
+import java.util.List;
 
 /**
  * <p>
@@ -14,27 +16,27 @@ import ${superServiceClassPackage};
 #if(${kotlin})
 interface ${table.serviceName} :${superServiceClass}<${entity}>
 #else
-public interface ${table.serviceName} extends${superServiceClass}<${entity}> {
+public interface ${table.serviceName} extends ${superServiceClass} <${entity}> {
     /**
     * 添加方法
     * @return
     */
-    public BaseResponse add(${entity} model);
+    public ${entity}  add(${entity} model);
     /**
     * 删除
     * @return
     */
-    public BaseResponse delete(${entity} model);
+    public ${entity}  delete(${entity} model);
     /**
     * 修改方法
     * @return
     */
-    public BaseResponse update(${entity} model);
+    public ${entity}  update(${entity} model);
     /**
     * 单个查询
     * @return
     */
-    public BaseResponse query(${entity} model);
+    public List<${entity}> query(${entity} model);
 
     /**
     * 条件查询分页列表

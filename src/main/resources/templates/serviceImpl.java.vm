@@ -5,6 +5,10 @@ import ${package.Mapper}.${table.mapperName};
 import ${package.Service}.${table.serviceName};
 import ${superServiceImplClassPackage};
 import org.springframework.stereotype.Service;
+import com.baomidou.mybatisplus.plugins.Page;
+import java.util.List;
+import com.baomidou.mybatisplus.mapper.Condition;
+import com.baomidou.mybatisplus.mapper.EntityWrapper;
 
 /**
  * <p>
@@ -20,55 +24,44 @@ open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperNam
 
 }
 #else
-public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
+public class ${table.serviceImplName} extends ${superServiceImplClass} <${table.mapperName}, ${entity}> implements ${table.serviceName} {
         /**
         * 添加方法
         * @return
         */
         @Override
-        public BaseResponse add(${entity} model){
-                boolean back=this.insertOrUpdate(model);
-                BaseResponse baseResponse=ResponseConvert.convert(back);
-                return baseResponse;
+        public ${entity}  add(${entity} model){
+            boolean back=this.insertOrUpdate(model);
+            return model;
         }
         /**
         * 删除
         * @return
         */
         @Override
-        public BaseResponse delete(${entity} model){
-            BaseResponse baseResponse;
-            if(null==model||null==model.getId()){
-            baseResponse=BackResponseUtil.getBaseResponse(ReturnCodeEnum.CODE_1006.getCode());
-            }else{
+        public ${entity}  delete(${entity} model){
             boolean back=this.deleteById(model.getId());
-            baseResponse=ResponseConvert.convert(back);
-            }
-        return baseResponse;
+            return model;
         }
         /**
         * 修改方法
         * @return
         */
         @Override
-        public BaseResponse update(${entity} model){
-            BaseResponse baseResponse;
-            if(null==model||null==model.getId()){
-            baseResponse=BackResponseUtil.getBaseResponse(ReturnCodeEnum.CODE_1006.getCode());
-            }else{
+        public ${entity}  update(${entity} model){
             boolean back=this.updateById(model);
-            baseResponse=ResponseConvert.convert(back);
-            }
-        return baseResponse;
+            return model;
         }
         /**
         * 单个查询
         * @return
         */
         @Override
-        public BaseResponse query(${entity} model){
+        public List<${entity}> query(${entity} model){
+            Condition condition =  Condition.create();
+            List<${entity}> logs = baseMapper.selectList(condition);
 
-            return null;
+            return logs;
         }
 
         /**
@@ -77,9 +70,12 @@ public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.m
         * @return
         */
         @Override
-        public Page page(${entity}PageParam pageParam){
-
-        return null;
+        public Page page(${entity} pageParam){
+            EntityWrapper condition =  new EntityWrapper();
+            Page page = new Page<${entity}>(0, 20);
+            List<${entity}> tbStrings = baseMapper.selectPage(page,condition);
+            page.setRecords(tbStrings);
+            return page;
         }
 
 }
