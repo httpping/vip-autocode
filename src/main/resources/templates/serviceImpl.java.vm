@@ -21,6 +21,66 @@ open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperNam
 }
 #else
 public class ${table.serviceImplName} extends ${superServiceImplClass}<${table.mapperName}, ${entity}> implements ${table.serviceName} {
+        /**
+        * 添加方法
+        * @return
+        */
+        @Override
+        public BaseResponse add(${entity} model){
+                boolean back=this.insertOrUpdate(model);
+                BaseResponse baseResponse=ResponseConvert.convert(back);
+                return baseResponse;
+        }
+        /**
+        * 删除
+        * @return
+        */
+        @Override
+        public BaseResponse delete(${entity} model){
+            BaseResponse baseResponse;
+            if(null==model||null==model.getId()){
+            baseResponse=BackResponseUtil.getBaseResponse(ReturnCodeEnum.CODE_1006.getCode());
+            }else{
+            boolean back=this.deleteById(model.getId());
+            baseResponse=ResponseConvert.convert(back);
+            }
+        return baseResponse;
+        }
+        /**
+        * 修改方法
+        * @return
+        */
+        @Override
+        public BaseResponse update(${entity} model){
+            BaseResponse baseResponse;
+            if(null==model||null==model.getId()){
+            baseResponse=BackResponseUtil.getBaseResponse(ReturnCodeEnum.CODE_1006.getCode());
+            }else{
+            boolean back=this.updateById(model);
+            baseResponse=ResponseConvert.convert(back);
+            }
+        return baseResponse;
+        }
+        /**
+        * 单个查询
+        * @return
+        */
+        @Override
+        public BaseResponse query(${entity} model){
+
+            return null;
+        }
+
+        /**
+        * 条件查询分页列表
+        * @param pageParam
+        * @return
+        */
+        @Override
+        public Page page(${entity}PageParam pageParam){
+
+        return null;
+        }
 
 }
 #end

@@ -22,9 +22,9 @@ public class GeneratorServiceEntity {
 
     @Test
     public void generateCode() {
-        String packageName = "com.tp.vip";
+        String packageName = "com.tp.api";
         boolean serviceNameStartWithI = false;//user -> UserService, 设置成true: user -> IUserService
-        generateByTables(serviceNameStartWithI, packageName, "user", "t_user");
+        generateByTables(serviceNameStartWithI, packageName, "tb_analysis_log");
     }
 
     private void generateByTables(boolean serviceNameStartWithI, String packageName, String... tableNames) {

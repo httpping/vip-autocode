@@ -12,9 +12,36 @@ import ${superServiceClassPackage};
  * @since ${date}
  */
 #if(${kotlin})
-interface ${table.serviceName} : ${superServiceClass}<${entity}>
+interface ${table.serviceName} :${superServiceClass}<${entity}>
 #else
-public interface ${table.serviceName} extends ${superServiceClass}<${entity}> {
+public interface ${table.serviceName} extends${superServiceClass}<${entity}> {
+    /**
+    * 添加方法
+    * @return
+    */
+    public BaseResponse add(${entity} model);
+    /**
+    * 删除
+    * @return
+    */
+    public BaseResponse delete(${entity} model);
+    /**
+    * 修改方法
+    * @return
+    */
+    public BaseResponse update(${entity} model);
+    /**
+    * 单个查询
+    * @return
+    */
+    public BaseResponse query(${entity} model);
+
+    /**
+    * 条件查询分页列表
+    * @param pageParam
+    * @return
+    */
+    public Page page(${entity} pageParam);
 
 }
 #end
