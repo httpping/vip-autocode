@@ -11,12 +11,12 @@ import com.baomidou.mybatisplus.mapper.Condition;
 import com.baomidou.mybatisplus.mapper.EntityWrapper;
 
 /**
- * <p>
- * $!{table.comment} 服务实现类
- * </p>
+ * $!{table.comment} 服务类
  *
- * @author ${author}
- * @since ${date}
+ * @author dean
+ * @version 1.0.0
+ * @date 2019/03/16 10:03
+ * @since 1.0.0
  */
 @Service
 #if(${kotlin})
@@ -24,17 +24,21 @@ open class ${table.serviceImplName} : ${superServiceImplClass}<${table.mapperNam
 
 }
 #else
-public class ${table.serviceImplName} extends ${superServiceImplClass} <${table.mapperName}, ${entity}> implements ${table.serviceName} {
+public class ${table.serviceImplName} #*extends ${superServiceImplClass} <${table.mapperName}, ${entity}>*# implements ${table.serviceName} {
+
+        @Resource
+        ${entity}Mapper mapper;
+
         /**
         * 添加方法
         * @return
         */
         @Override
-        public ${entity}  add(${entity} model){
-            boolean back=this.insertOrUpdate(model);
-            return model;
+        public int  add(${entity} model){
+            int back=mapper.save(model);
+            return back;
         }
-        /**
+     #*   /**
         * 删除
         * @return
         */
@@ -42,15 +46,15 @@ public class ${table.serviceImplName} extends ${superServiceImplClass} <${table.
         public ${entity}  delete(${entity} model){
             boolean back=this.deleteById(model.getId());
             return model;
-        }
+        }*#
         /**
         * 修改方法
         * @return
         */
         @Override
-        public ${entity}  update(${entity} model){
-            boolean back=this.updateById(model);
-            return model;
+        public int  update(${entity} model){
+            int back=mapper.update(model);
+            return back;
         }
         /**
         * 单个查询
@@ -58,25 +62,25 @@ public class ${table.serviceImplName} extends ${superServiceImplClass} <${table.
         */
         @Override
         public List<${entity}> query(${entity} model){
-            Condition condition =  Condition.create();
-            List<${entity}> logs = baseMapper.selectList(condition);
-
-            return logs;
+            HashMap<String,Object> params = new HashMap<>();
+            params.put("id",0);
+            List<${entity}> results = mapper.list(params);
+            return results;
         }
 
-        /**
+ #*       /**
         * 条件查询分页列表
         * @param pageParam
         * @return
-        */
-        @Override
+        */*#
+       #* @Override
         public Page page(${entity} pageParam){
             EntityWrapper condition =  new EntityWrapper();
             Page page = new Page<${entity}>(0, 20);
             List<${entity}> tbStrings = baseMapper.selectPage(page,condition);
             page.setRecords(tbStrings);
             return page;
-        }
+        }*#
 
 }
 #end

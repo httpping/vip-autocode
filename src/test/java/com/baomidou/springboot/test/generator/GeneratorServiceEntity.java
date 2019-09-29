@@ -1,14 +1,19 @@
 package com.baomidou.springboot.test.generator;
 
+import com.baomidou.mybatisplus.generator.InjectionConfig;
 import org.junit.Test;
 
-import com.baomidou.mybatisplus.generator.AutoGenerator;
 import com.baomidou.mybatisplus.generator.config.DataSourceConfig;
 import com.baomidou.mybatisplus.generator.config.GlobalConfig;
 import com.baomidou.mybatisplus.generator.config.PackageConfig;
 import com.baomidou.mybatisplus.generator.config.StrategyConfig;
 import com.baomidou.mybatisplus.generator.config.rules.DbType;
 import com.baomidou.mybatisplus.generator.config.rules.NamingStrategy;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 /**
  * <p>
@@ -24,17 +29,17 @@ public class GeneratorServiceEntity {
     public void generateCode() {
         String packageName = "com.tp.api";
         boolean serviceNameStartWithI = false;//user -> UserService, 设置成true: user -> IUserService
-        generateByTables(serviceNameStartWithI, packageName, "tb_analysis_log");
+        generateByTables(serviceNameStartWithI, packageName, "work_discrepant_rule");
     }
 
     private void generateByTables(boolean serviceNameStartWithI, String packageName, String... tableNames) {
         GlobalConfig config = new GlobalConfig();
-        String dbUrl = "jdbc:mysql://localhost:3306/cmvip";
+        String dbUrl = "jdbc:mysql://fas-mysql-test.paas.kjtyun.com:44408/init_table";
         DataSourceConfig dataSourceConfig = new DataSourceConfig();
         dataSourceConfig.setDbType(DbType.MYSQL)
                 .setUrl(dbUrl)
                 .setUsername("root")
-                .setPassword("123456")
+                .setPassword("v9mq3C48QG")
                 .setDriverName("com.mysql.jdbc.Driver");
         StrategyConfig strategyConfig = new StrategyConfig();
         strategyConfig
@@ -53,7 +58,13 @@ public class GeneratorServiceEntity {
         config.setActiveRecord(true);
         config.setBaseColumnList(true);
         config.setBaseResultMap(true);
-        new AutoGenerator().setGlobalConfig(config)
+
+
+        //自定义 末班
+        List temple = new ArrayList();
+
+        // 代码生成器
+        AutoGenerator mpg = new AutoGenerator().setGlobalConfig(config)
                 .setDataSource(dataSourceConfig)
                 .setStrategy(strategyConfig)
                 .setPackageInfo(
@@ -62,7 +73,20 @@ public class GeneratorServiceEntity {
                                 .setController("controller")
                                 .setEntity("entity")
 
-                ).execute();
+                ).setCfg( // 注入自定义配置，可以在 VM 中使用 cfg.abc 设置的值
+                        new InjectionConfig() {
+                            @Override
+                            public void initMap() {
+                                Map<String, Object> map = new HashMap<>();
+                                map.put("abc", this.getConfig().getGlobalConfig().getAuthor() + "-mp");
+                                map.put("rpc.java.vm",this.getConfig().getGlobalConfig().getControllerName() + "-myen");
+                                map.put("rpc","rpcdemo");
+                                this.setMap(map);
+                            }
+                        }.setFileOutConfigList(temple))
+                ;
+
+        mpg.execute();
     }
 
     private void generateByTables(String packageName, String... tableNames) {

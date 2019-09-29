@@ -1,15 +1,14 @@
-package ${package.Controller};
-
-
+package ${package.Controller}import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.RequestMapping;
-
-#if(${restControllerStyle})
 import org.springframework.web.bind.annotation.RestController;
+
+;
+#if(${restControllerStyle})
 #else
-import org.springframework.stereotype.Controller;
 #end
 #if(${superControllerClassPackage})
-import ${superControllerClassPackage};
+    ${superControllerClassPackage}
+;
 #end
 
 /**
@@ -30,12 +29,68 @@ import ${superControllerClassPackage};
 class ${table.controllerName}#if(${superControllerClass}) : ${superControllerClass}()#end
 
 #else
-#if(${superControllerClass})
-public class ${table.controllerName} extends ${superControllerClass} {
-#else
-public class ${table.controllerName} {
-#end
+    #if(${superControllerClass})
+    public class ${table.controllerName} extends ${superControllerClass} {
+    #else
+    public class ${table.controllerName} {
+    #end
+@Resource
+    ${entity}Service service;
 
-}
 
+/**
+ * 添加方法
+ * @return
+ */
+@RequestValidated
+@ActionMapping("/v1/diff-rule/add")
+public ResultBodyMessage add(@Validated @Define("body.info") ${entity}Vo vo){
+    ${entity} entity=BeanUtils.convertBean(vo, ${entity}.class);
+        entity.setId(IDUtil.generateId());
+        BeanDefaultValueUtil.setDefaultValue(entity);
+        long back=service.insert(entity);
+        ResultBodyMessage rm=new ResultBodyMessage(entity);
+        return rm;
+        }
+/**
+ * 删除
+ * @return
+ */
+@ActionMapping("/v1/diff-rule/delete")
+public ResultBodyMessage delete(@Validated(ValidGroupDelete.class) @Define("body.info") ${entity}Vo vo){
+    ${entity} entity=BeanUtils.convertBean(vo, ${entity}.class);
+        entity.setIsDeleted(1);
+        entity.setUpdatedTimestamp(System.currentTimeMillis());
+        long back=service.update(entity);
+        ResultBodyMessage rm=new ResultBodyMessage(entity);
+        RedisUtil d;
+        return rm;
+        }
+/**
+ * 修改方法
+ * @return
+ */
+@ActionMapping("/v1/diff-rule/update")
+public ResultBodyMessage update(@Validated(ValidGroupUpdate.class) @Define("body.info") ${entity}Vo vo){
+    ${entity} entity=BeanUtils.convertBean(vo, ${entity}.class);
+        entity.setUpdatedTimestamp(System.currentTimeMillis());
+        long back=service.update(entity);
+        ResultBodyMessage rm=new ResultBodyMessage(entity);
+        return rm;
+        }
+
+
+@ActionMapping("/v1/diff-rule/list")
+public Object list(@Define("body.query") ${entity}Vo vo,@Define("body.page") Page page){
+        FasPageInfo<${entity}> fasPageInfo=new FasPageInfo();
+        fasPageInfo.setCurrPageNo(page.getNumber());
+        fasPageInfo.setLimit(page.getSize());
+    ${entity} params=BeanUtils.convertBean(vo, ${entity}.class);
+        fasPageInfo.setParams(params);
+        FasPageInfo<${entity}> result=service.findByConditionPage(fasPageInfo);
+        page.setTotalCount(result.getTotalCount());
+        page.setTotalPage(result.getPageNos());
+        return new PageResult(page,result.getDatas());
+        }
+        }
 #end

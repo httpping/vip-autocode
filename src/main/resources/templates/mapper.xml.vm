@@ -4,7 +4,7 @@
 
 #if(${enableCache})
     <!-- 开启二级缓存 -->
-    <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
+##    <cache type="org.mybatis.caches.ehcache.LoggingEhcache"/>
 
 #end
 #if(${baseResultMap})
@@ -32,7 +32,18 @@
 #foreach($field in ${table.commonFields})
     #if(${field.name} == ${field.propertyName})${field.name}#else${field.name} AS ${field.propertyName}#end,
 #end
-        ${table.fieldNames}
+       ${table.fieldNames}
+    </sql>
+
+
+    <sql id="condition">
+         <if test="null!=params">
+             #foreach($field in ${table.fields})
+                 <if test="null != params.${field.propertyName}">
+                     and ${field.name} = #{params.${field.propertyName},jdbcType=${field.type}}
+                 </if>
+             #end
+         </if>
     </sql>
 
 #end

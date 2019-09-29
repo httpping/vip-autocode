@@ -5,45 +5,48 @@ import ${superServiceClassPackage};
 import com.baomidou.mybatisplus.plugins.Page;
 import java.util.List;
 
+
 /**
- * <p>
  * $!{table.comment} 服务类
- * </p>
  *
- * @author ${author}
- * @since ${date}
+ * @author dean
+ * @version 1.0.0
+ * @date 2019/03/16 10:03
+ * @since 1.0.0
  */
+
+
 #if(${kotlin})
 interface ${table.serviceName} :${superServiceClass}<${entity}>
 #else
-public interface ${table.serviceName} extends ${superServiceClass} <${entity}> {
+public interface ${table.serviceName} #*extends ${superServiceClass} <${entity}> *#{
     /**
     * 添加方法
     * @return
     */
-    public ${entity}  add(${entity} model);
-    /**
+    public int  add(${entity} model);
+  #*  /**
     * 删除
     * @return
     */
-    public ${entity}  delete(${entity} model);
+    public ${entity}  delete(${entity} model);*#
     /**
     * 修改方法
     * @return
     */
-    public ${entity}  update(${entity} model);
+    public int  update(${entity} model);
     /**
     * 单个查询
     * @return
     */
     public List<${entity}> query(${entity} model);
 
-    /**
+  #*  /**
     * 条件查询分页列表
     * @param pageParam
     * @return
     */
-    public Page page(${entity} pageParam);
+    public Page page(${entity} pageParam);*#
 
 }
 #end
