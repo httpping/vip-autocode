@@ -29,7 +29,7 @@ public class GeneratorServiceEntity {
     public void generateCode() {
         String packageName = "com.tp.api";
         boolean serviceNameStartWithI = false;//user -> UserService, 设置成true: user -> IUserService
-        generateByTables(serviceNameStartWithI, packageName, "work_discrepant_rule");
+        generateByTables(serviceNameStartWithI, packageName, "work_share_rule","work_share_sku","work_share_sku_item","work_share_order","work_share_order_item","work_share_manage","work_share_business_info");
     }
 
     private void generateByTables(boolean serviceNameStartWithI, String packageName, String... tableNames) {
@@ -47,6 +47,7 @@ public class GeneratorServiceEntity {
                 .setEntityLombokModel(false)
                 .setDbColumnUnderline(true)
                 .setNaming(NamingStrategy.underline_to_camel)
+                .setTablePrefix("work_")
                 .setInclude(tableNames);//修改替换成你需要的表名，多个表名传数组
         config.setActiveRecord(false)
                 .setAuthor("tanping")
