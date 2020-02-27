@@ -29,17 +29,17 @@ public class GeneratorServiceEntity {
     public void generateCode() {
         String packageName = "com.tp.api";
         boolean serviceNameStartWithI = false;//user -> UserService, 设置成true: user -> IUserService
-        generateByTables(serviceNameStartWithI, packageName, "work_share_rule","work_share_sku","work_share_sku_item","work_share_order","work_share_order_item","work_share_manage","work_share_business_info");
+        generateByTables(serviceNameStartWithI, packageName, "test-demo");
     }
 
     private void generateByTables(boolean serviceNameStartWithI, String packageName, String... tableNames) {
         GlobalConfig config = new GlobalConfig();
-        String dbUrl = "jdbc:mysql://fas-mysql-test.paas.kjtyun.com:44408/init_table";
+        String dbUrl = "jdbc:mysql://localhost:43306/init_table";
         DataSourceConfig dataSourceConfig = new DataSourceConfig();
         dataSourceConfig.setDbType(DbType.MYSQL)
                 .setUrl(dbUrl)
                 .setUsername("root")
-                .setPassword("v9mq3C48QG")
+                .setPassword("123456")
                 .setDriverName("com.mysql.jdbc.Driver");
         StrategyConfig strategyConfig = new StrategyConfig();
         strategyConfig
